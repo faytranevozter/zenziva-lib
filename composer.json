@@ -1,0 +1,19 @@
+{
+    "name": "faytranevozter/zenziva-lib",
+    "description": "Zenziva SMS Online Gateway Library",
+    "version": "1.0",
+    "require": {
+        "curl/curl": "^2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fahrur Rifai",
+            "email": "mfahrurrifai@gmail.com",
+            "homepage": "https://elfay.id"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Faytranevozter\\Zenziva\\": "src/"}
+    }
+}
