@@ -80,6 +80,30 @@ class Sms {
 	protected $url = '';
 
 	/**
+	 * List errors
+	 * @var array
+	 */
+	private $errors = [];
+
+	/**
+	 * Last error message
+	 * @var array/string
+	 */
+	private $last_error = NULL;
+
+	/**
+	 * List responses
+	 * @var array
+	 */
+	private $responses = [];
+
+	/**
+	 * Last response
+	 * @var array/string
+	 */
+	private $last_response = NULL;
+
+	/**
 	 * Constructor
 	 * @param string $user zenziva username
 	 * @param string $pass zenziva password
@@ -167,7 +191,7 @@ class Sms {
 	 * Send message
 	 * @param  string $number Receiver number (optional)
 	 * @param  string $text   Message (optional)
-	 * @return array          Data
+	 * @return boolean          Data
 	 */
 	public function send($number='', $text='') {
 
@@ -183,7 +207,7 @@ class Sms {
 		}
 
 		$url = self::get_url();
-		$ch = new Curl\Curl();
+		$ch = new Curl();
 		$ch->post($url, [
 			'userkey' => $this->username,
 			'passkey' => $this->password,
@@ -191,14 +215,29 @@ class Sms {
 			'pesan' => $this->message,
 		]);
 
-		$response = $ch->response;
-		$error    = $ch->error;
+		$response   = $ch->response;
+		$error      = $ch->error;
+		$error_code = $ch->error_code;
 		$ch->close();
 
 		if ($error) {
-			return $ch->error_code;
+			$this->last_error = "Curl Error Code : " . $error_code;
+			$this->errors[] = $this->last_error;
+			return FALSE;
 		} else {
-			return simplexml_load_string($response);
+			$xml_response = simplexml_load_string($response);
+			$array_xml = json_decode(json_encode($xml_response), TRUE);
+
+			$this->last_response = $array_xml;
+			$this->responses[] = $this->last_response;
+
+			if ($array_xml['message']['text'] == 'Success') {
+				return TRUE;
+			} else {
+				$this->last_error = $array_xml['message']['text'];
+				$this->errors[] = $this->last_error;
+				return FALSE;
+			}
 		}
 	}
 
@@ -222,5 +261,37 @@ class Sms {
 		$this->url = self::SCHEME . '://' . $this->subdomain . '.' . self::DOMAIN . '/' . $path;
 
 		return $this->url;
+	}
+
+	/**
+	 * Get List Errors
+	 * @return array 
+	 */
+	public function errors() {
+		return $this->errors;
+	}
+
+	/**
+	 * Get Last Error
+	 * @return array/string 
+	 */
+	public function last_error() {
+		return $this->last_error;
+	}
+
+	/**
+	 * Get List Responses
+	 * @return array 
+	 */
+	public function responses() {
+		return $this->responses;
+	}
+
+	/**
+	 * Get Last Response
+	 * @return array/string 
+	 */
+	public function last_response() {
+		return $this->last_response;
 	}
 }
