@@ -23,7 +23,7 @@ class Sms {
 		],
 		'sms_center'   => [
 			'subdomain' => '',
-			'path'      => 'apps/smsapi.php',
+			'path'      => 'api/sendsms/',
 		],
 	];
 
