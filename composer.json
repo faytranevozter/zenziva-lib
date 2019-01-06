@@ -1,10 +1,11 @@
 {
     "name": "faytranevozter/zenziva-lib",
     "description": "Zenziva SMS Online Gateway Library",
-    "version": "1.0",
+    "version": "1.0.0",
     "require": {
         "curl/curl": "^2.0"
     },
+    "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
         {
