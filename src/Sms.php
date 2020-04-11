@@ -237,8 +237,6 @@ class Sms {
 			$params['type'] = 'otp';
 		}
 
-		print_r($params);
-
 		$ch->post($url, $params);
 
 		$response   = $ch->response;
