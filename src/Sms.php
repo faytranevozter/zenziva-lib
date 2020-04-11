@@ -58,6 +58,12 @@ class Sms {
 	private $message;
 
 	/**
+	 * Sms type OTP
+	 * @var string
+	 */
+	private $otp = FALSE;
+
+	/**
 	 * URL Scheme
 	 */
 	const SCHEME = 'https';
@@ -188,15 +194,26 @@ class Sms {
 	}
 
 	/**
+	 * Set type OTP
+	 * @param  boolean $status 
+	 * @return this
+	 */
+	public function otp($status=TRUE) {
+		$this->otp = $status === TRUE;
+		return $this;
+	}
+
+	/**
 	 * Send message
 	 * @param  string $number Receiver number (optional)
 	 * @param  string $text   Message (optional)
 	 * @return boolean          Data
 	 */
-	public function send($number='', $text='') {
+	public function send($number='', $text='', $otp=FALSE) {
 
 		if ( ! empty($number)) { $this->to($number); }
 		if ( ! empty($text)) { $this->message($text); }
+		if ( ! empty($otp)) { $this->otp($otp); }
 
 		if (empty($this->to)) {
 			throw new \Exception('Receiver number is not set.');
@@ -208,12 +225,21 @@ class Sms {
 
 		$url = self::get_url();
 		$ch = new Curl();
-		$ch->post($url, [
+
+		$params = [
 			'userkey' => $this->username,
 			'passkey' => $this->password,
 			'nohp' => $this->to,
 			'pesan' => $this->message,
-		]);
+		];
+
+		if ($this->otp) {
+			$params['type'] = 'otp';
+		}
+
+		print_r($params);
+
+		$ch->post($url, $params);
 
 		$response   = $ch->response;
 		$error      = $ch->error;

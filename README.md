@@ -30,7 +30,7 @@ $sms = new Sms();
 $sms->username('faytranevozter'); // chainable
 $sms->password('123456'); // chainable
 // send sms
-$sms->send('089765432123', 'Helaw!');
+$sms->send('089765432123', 'Helaw!'); // send(number, text, otp)
 ```
 Default type is `reguler` if 3rd parameter not set.
 
@@ -42,7 +42,7 @@ $sms->send('089765432123', 'Helaw! this is masking sms');
 $sms = new Sms('faytranevozter', '123456');
 $sms->type('masking'); // chainable
 // send sms
-$sms->send('089765432123', 'Helaw! this is masking sms');
+$sms->send('089765432123', 'Helaw! this is masking sms'); // send(number, text, otp)
 ```
 Default type is `reguler` if 3rd parameter not set.
 
@@ -56,9 +56,22 @@ $sms = new Sms('faytranevozter', '123456');
 $sms->type('sms_center'); // chainable
 $sms->subdomain('mysubdomain'); // chainable, [required for sms_center]
 // send sms
-$sms->send('089765432123', 'Helaw! this is from sms_center');
+$sms->send('089765432123', 'Helaw! this is from sms_center'); // send(number, text, otp)
 ```
 Default type is `reguler` if 3rd parameter not set.
+
+#### OTP SMS
+Zenziva now apply special treatment for SMS OTP. See [#Zenziva Docs](https://www.zenziva.id/dokumentasi/#1487744370576-71f03366-9c88)
+> Untuk mengirim SMS OTP, wajib menambahkan parameter type=otp
+```php
+$sms = new Sms('faytranevozter', '123456', 'masking');
+$sms->send('089765432123', 'Helaw! this is masking sms', TRUE);
+// or
+$sms = new Sms('faytranevozter', '123456');
+$sms->otp(TRUE); // chainable
+// send sms
+$sms->send('089765432123', 'Helaw! this is masking sms'); // send(number, text, otp)
+```
 
 #### Chaining
 ```php
@@ -132,7 +145,7 @@ $this->zenziva->send('089765432123', 'Helaw! this is my sms');
 
 ## Credits and License
 ### Author
-Fahrur Rifai [elfay.id](https://www.elfay.id)  
+Fahrur Rifai [fahrur.dev](https://www.fahrur.dev)  
 Twitter [@faytranevozter](https://twitter.com/faytranevozter)
 
 ### License
